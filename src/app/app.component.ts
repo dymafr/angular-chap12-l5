@@ -1,5 +1,5 @@
-import { HttpClient } from "@angular/common/http";
-import { Component } from "@angular/core";
+import { HttpClient } from '@angular/common/http';
+import { Component } from '@angular/core';
 import {
   AbstractControl,
   AsyncValidatorFn,
@@ -8,38 +8,30 @@ import {
   ValidationErrors,
   ValidatorFn,
   Validators
-} from "@angular/forms";
-import { Observable } from "rxjs";
-import { map } from "rxjs/operators";
+} from '@angular/forms';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 @Component({
-  selector: "app-root",
-  templateUrl: "./app.component.html",
-  styleUrls: ["./app.component.scss"]
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  public form: FormGroup;
+  public form: FormGroup = new FormGroup(
+    {
+      name: new FormControl(''),
+      email: new FormControl(
+        '',
+        [Validators.required, Validators.email],
+        this.asyncEmailValidator()
+      ),
+      confirmEmail: new FormControl('')
+    },
+    { validators: this.emailsMatch() }
+  );
 
   constructor(private http: HttpClient) {}
-
-  ngOnInit() {
-    this.createForm();
-  }
-
-  createForm() {
-    this.form = new FormGroup(
-      {
-        name: new FormControl(""),
-        email: new FormControl(
-          "",
-          [Validators.required, Validators.email],
-          this.asyncEmailValidator()
-        ),
-        confirmEmail: new FormControl("")
-      },
-      { validators: this.emailsMatch() }
-    );
-  }
 
   reinitialiser() {
     this.form.reset();
@@ -51,7 +43,7 @@ export class AppComponent {
 
   emailsMatch(): ValidatorFn {
     return (group: FormGroup): ValidationErrors | null => {
-      return group.get("email").value != group.get("confirmEmail").value
+      return group.get('email').value != group.get('confirmEmail').value
         ? { noMatch: true }
         : null;
     };
