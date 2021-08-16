@@ -42,8 +42,8 @@ export class AppComponent {
   }
 
   emailsMatch(): ValidatorFn {
-    return (group: FormGroup): ValidationErrors | null => {
-      return group.get('email').value != group.get('confirmEmail').value
+    return (control: AbstractControl): ValidationErrors | null => {
+      return control.get('email')!.value != control.get('confirmEmail')!.value
         ? { noMatch: true }
         : null;
     };
